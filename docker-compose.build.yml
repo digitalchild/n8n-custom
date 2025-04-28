@@ -1,0 +1,25 @@
+services:
+  n8n:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: 20
+        N8N_VERSION: latest
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=0.0.0.0
+      - NODE_ENV=production
+      - N8N_PROTOCOL=http
+      - N8N_PORT=5678
+      - N8N_EDITOR_BASE_URL=http://localhost:5678
+      - GENERIC_TIMEZONE=UTC
+      - WEBHOOK_URL=http://localhost:5678/
+    volumes:
+      - n8n_data:/home/node/.n8n
+      # Optional: Mount custom certificates if needed
+      # - ./custom-certificates:/opt/custom-certificates
+
+volumes:
+  n8n_data:

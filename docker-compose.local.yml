@@ -1,0 +1,15 @@
+volumes:
+  n8n-data:
+
+services:
+  n8n:
+    image: n8n-custom-base:latest
+    environment:
+      - N8N_HOST=${N8N_HOST:-0.0.0.0}
+      - N8N_PORT=${N8N_PORT:-5678}
+      - NODE_ENV=${NODE_ENV:-development}
+      - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:5678/}
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n-data:/home/node/.n8n
