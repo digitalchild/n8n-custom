@@ -1,0 +1,23 @@
+# Environment vars
+.env
+.env.local
+.env.production
+
+# Docker
+.docker/
+docker-compose.override.yml
+docker-compose.*.yml
+*.dockerfile
+*.dockerignore
+# Docker volumes
+docker-volumes/
+# Docker build artifacts
+**/target/
+**/build/
+**/dist/
+**/node_modules/
+**/.next/
+**/.nuxt/
+**/.output/
+**/.cache/
+**/.temp/
