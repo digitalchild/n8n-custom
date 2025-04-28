@@ -6,7 +6,6 @@
 # Docker
 .docker/
 docker-compose.override.yml
-docker-compose.*.yml
 *.dockerfile
 *.dockerignore
 # Docker volumes
