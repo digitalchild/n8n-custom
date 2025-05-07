@@ -1,27 +1,27 @@
-# n8n Custom Image Playwright
+# n8n Custom Image with Playwright
 
-This is a custom n8n docker configuration with support for playwright. The official n8n images are built on Apline Linux which has limited support for playwright. This image switches out the base image for Debian and installs the all dependencies required for playwright.
+This is a custom n8n docker configuration with support for playwright. The official n8n images are built on Alpine Linux which has limited support for playwright. This image switches out the base image for Debian and installs all dependencies required for playwright.
 
 This will allow you to use the [n8n-nodes-playwright](https://github.com/n8n-io/n8n-nodes-playwright) community node on your self hosted n8n instance.
 
 ## 🚀 Quick Start
 
-1. **Copy environment variables:**
+1. **Initialize environment variables:**
 
    ```bash
-   cp .env.local.sample .env.local
+   make env-init ENV=local
    ```
 
 2. **Build the base Docker image:**
 
    ```bash
-   ./build-image.sh
+   make build
    ```
 
 3. **Start n8n locally:**
 
    ```bash
-   docker-compose -f docker-compose.local.yml --env-file .env.local up -d
+   make start ENV=local
    ```
 
 4. **Access n8n:**
@@ -31,116 +31,114 @@ This will allow you to use the [n8n-nodes-playwright](https://github.com/n8n-io/
 
 ```bash
 n8n-custom/
-├── Dockerfile.base
-├── docker-entrypoint.sh
-├── n8n-task-runners.json
-├── package.json
-├── docker-compose.local.yml
-├── docker-compose.production.yml
-├── .env.local
-└── .env.production
+├── Dockerfile.base              # Custom Dockerfile with Playwright support
+├── docker-entrypoint.sh         # Custom entrypoint script
+├── Makefile                     # All commands in one file
+├── n8n-task-runners.json        # Task runner configuration
+├── package.json                 # Node.js dependencies
+├── docker-compose.local.yml     # Local environment configuration
+├── docker-compose.production.yml # Production environment configuration
+├── .env.local.sample            # Sample environment variables for local
+└── .env.production.sample       # Sample environment variables for production
 ```
 
-## Building the base image
+## Available Commands
 
-The base image can be built and used locally or pushed to a container registry.
-
-### Local build
+Run `make help` to see all available commands:
 
 ```bash
-# Build the base image (default n8n-custom-base:latest) 
-./build-image.sh
-
-# Build the base image with a tag (optional)
-./build-image.sh -t n8n-custom-base:latest
+make help
 ```
 
-### Push to a container registry (optional)
+### Building and Managing Images
 
 ```bash
-# Push the base image to a container registry
-./build-image.sh push
-docker push n8n-custom-base:latest
+# Build the base image (default: n8n-custom-base:latest)
+make build
+
+# Build with specific tag
+make build TAG=v1.0
+
+# Build with date-based versioning
+make build-dated
+
+# Push to a container registry
+make push
 ```
 
-## Running the local environment
-
-The local environment uses SQLite as the database and runs a single n8n instance. It's ideal for development and testing purposes. The environment includes:
-
-- n8n instance running on port 5678
-- SQLite database for data persistence
-- Basic configuration for local development
-- Optional custom certificates support
-
-### Local configuration
-
-The @.env.local.sample file contains the required environment variables for the local environment. Copy the file and rename to .env.local
-
-### Starting n8n in deamon mode
+### Environment Management
 
 ```bash
+# Copy sample environment files
+make env-init ENV=local
+make env-init ENV=production
+
 # Generate secure encryption key
-docker-compose -f docker-compose.local.yml --env-file .env.local up -d
+make gen-key
+
+# Generate secure JWT secret
+make gen-jwt
 ```
 
-### Stopping the local environment
+### Container Operations
 
 ```bash
-docker-compose -f docker-compose.local.yml down
+# Start environments
+make start ENV=local
+make start ENV=production
+
+# Stop environments
+make stop ENV=local
+make stop ENV=production
+
+# View logs
+make logs ENV=local
+
+# Restart containers
+make restart ENV=local
+
+# Create backups
+make backup ENV=local
+make backup ENV=production
 ```
 
-To access the n8n instance, open your browser and navigate to:
+### Updating
 
 ```bash
-http://localhost:5678
+# Update to latest n8n version (builds new image and restarts)
+make update ENV=local
 ```
 
-## Running the production environment
+## Local Environment
 
-The production environment uses PostgreSQL and Redis as the database and queue. It's ideal for production use cases. The environment includes:
+The local environment uses SQLite as the database and runs a single n8n instance. It's ideal for development and testing purposes.
 
-- n8n instance running on port 5678
-- PostgreSQL database for data persistence
-- Redis for queue processing
+## Production Environment
 
-### Production configuration
+The production environment uses PostgreSQL and Redis for the database and queue. It's designed for production use cases with better performance and reliability.
 
-The @.env.production.sample file contains the required environment variables for the production environment.
-
-### Securing your host
-
-To ensure your host is secure create secure encrption keys and JWT secret for production.
+For production, make sure to set secure encryption keys and JWT secrets:
 
 ```bash
-# Generate secure encryption key
-openssl rand -hex 16
-
-# Generate secure JWT secret  
-openssl rand -hex 16
+make gen-key
+make gen-jwt
 ```
 
-## Starting the production environment
+Copy the generated values to your `.env.production` file.
 
-```bash
-# Start production environment with PostgreSQL and Redis
-docker-compose -f docker-compose.production.yml --env-file .env.production up -d
-```
+## Install n8n-nodes-playwright
 
-## Stopping the production environment
+Once you have the image built, and n8n is running you can install the n8n-nodes-playwright node by going to Settings > Community Nodes and add n8n-nodes-playwright.
 
-```bash
-docker-compose -f docker-compose.production.yml --env-file .env.production down
-```
+![Install n8n-nodes-playwright](./docs/images/install-playwright.png)
 
-## Updating the base image
+### Playwright Node Usage
 
-Updating the base image is very easy and straight forward. Run the following commands to update to the latest.
+Once you have the node installed, you can use it in a workflow by going to the n8n-nodes-playwright node and adding a new playwrightnode.
 
-```bash
-# 1. Build the new image
-./build-image.sh -t n8n-custom-base:latest
+![Add playwright node](./docs/images/add-playwright-node.png)
 
-# 2. Restart your environments to use the new image
-docker-compose -f docker-compose.local.yml restart
-docker-compose -f docker-compose.prod.yml restart
-```
+
+
+
+

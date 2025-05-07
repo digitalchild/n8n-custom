@@ -57,6 +57,13 @@ RUN apt-get update && \
     && npx playwright install-deps \
     && npx playwright install chromium firefox
 
+
+# Install ffmpeg
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 # Setup the Task Runner Launcher
 ARG TARGETPLATFORM
 ARG LAUNCHER_VERSION=1.1.1
