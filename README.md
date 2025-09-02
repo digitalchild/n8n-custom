@@ -126,6 +126,21 @@ make gen-jwt
 
 Copy the generated values to your `.env.production` file.
 
+## Scripts
+
+The `scripts/` directory contains utility scripts for managing your n8n deployment:
+
+### Backup Scripts
+
+- **`backup-n8n.sh`** - Automated backup script that creates compressed backups of n8n data
+  - Creates timestamped backup files in `/opt/apps/n8n/backups/`
+  - Automatically removes old backups (keeps last 7)
+  - Logs backup operations
+  
+- **`n8n-backup.cron`** - Cron job configuration for automated daily backups
+  - Runs backup script daily at 2 AM
+  - Install with: `sudo cp scripts/n8n-backup.cron /etc/cron.d/n8n-backup`
+
 ## Install n8n-nodes-playwright
 
 Once you have the image built, and n8n is running you can install the n8n-nodes-playwright node by going to Settings > Community Nodes and add n8n-nodes-playwright.
