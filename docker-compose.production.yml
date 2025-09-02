@@ -74,6 +74,7 @@ services:
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_NON_ROOT_PASSWORD}
       - EXECUTIONS_MODE=queue
       - EXECUTIONS_PROCESS=worker
+      - N8N_RUNNERS_ENABLED=true
       - QUEUE_BULL_REDIS_HOST=redis
       - QUEUE_BULL_REDIS_PORT=6379
       - NODE_ENV=production

@@ -79,7 +79,10 @@ gen-jwt:
 	@echo "✅ Copy this secret to your .env.$(ENV) file"
 
 # Update base image and restart
-update: build-dated restart
+update: build-dated
+	@echo "🔄 Updating containers with new image..."
+	docker-compose -f docker-compose.$(ENV).yml down
+	docker-compose -f docker-compose.$(ENV).yml --env-file .env.$(ENV) up -d
 	@echo "✅ Updated to latest version with tag $(DATE_TAG)"
 
 # Create a backup
